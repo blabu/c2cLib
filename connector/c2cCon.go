@@ -66,15 +66,15 @@ func NewC2cConnection(conn net.Conn, cnf ConfConnection) (IConnection, error) {
 	}
 	if cnf.IsNew {
 		err := res.register()
-		 if err != nil {
-			 return nil, err
-		 }
+		if err != nil {
+			return nil, err
+		}
 	} else {
-	 err := res.init()
-	 if err != nil {
-		 return nil, err
-	 }
- }
+		err := res.init()
+		if err != nil {
+			return nil, err
+		}
+	}
 	go func() {
 		dt := time.NewTicker(cnf.PingTimeout)
 		defer dt.Stop()
@@ -87,7 +87,7 @@ func NewC2cConnection(conn net.Conn, cnf ConfConnection) (IConnection, error) {
 			}
 		}
 	}()
-	return res, err
+	return res, nil
 }
 
 func (c *Connection) Write(to string, command uint16, data []byte) error {
