@@ -44,7 +44,7 @@ type Connection struct {
 	cnf         ConfConnection
 	p           parser.Parser
 	stop        chan bool
-	receiveBuff []byte
+	readTimeout time.Duration
 }
 
 //IConnection - интерфейс работы с соединением
@@ -59,10 +59,11 @@ type IConnection interface {
 func NewC2cConnection(conn net.Conn, cnf ConfConnection) (IConnection, error) {
 	p := parser.CreateEmptyParser(cnf.ChunkSize)
 	res := &Connection{
-		conn: conn,
-		cnf:  cnf,
-		p:    p,
-		stop: make(chan bool),
+		conn:        conn,
+		cnf:         cnf,
+		p:           p,
+		stop:        make(chan bool),
+		readTimeout: cnf.PingTimeout * 2,
 	}
 	if cnf.IsNew {
 		err := res.register()
@@ -107,6 +108,7 @@ func (c *Connection) Write(to string, command uint16, data []byte) error {
 }
 
 func (c *Connection) Read() (from string, command uint16, data []byte, err error) {
+	c.conn.SetReadDeadline(time.Now().Add(c.readTimeout))
 	reader := bufio.NewReader(c.conn)
 	receiveBuff, err := c.p.ReadPacketHeader(reader)
 	if err != nil {
