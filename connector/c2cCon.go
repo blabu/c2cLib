@@ -51,6 +51,7 @@ type Connection struct {
 type IConnection interface {
 	Read() (from string, command uint16, data []byte, err error)
 	Write(to string, command uint16, data []byte) error
+ Connect(name string) error
 	Close() error
 }
 
@@ -168,7 +169,7 @@ func (c *Connection) init() error {
 	return nil
 }
 
-func (c *Connection) connect(name string) error {
+func (c *Connection) Connect(name string) error {
 	if err := c.Write(name, dto.ConnectByNameCOMMAND, nil); err != nil {
 		return err
 	}
