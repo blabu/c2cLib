@@ -12,8 +12,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/blabu/egeonC2cService/dto"
-	"github.com/blabu/egeonC2cService/parser"
+	"github.com/blabu/c2cLib/dto"
+	"github.com/blabu/c2cLib/parser"
 )
 
 const proto = 1

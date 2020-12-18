@@ -7,7 +7,7 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/blabu/egeonC2cService/dto"
+	"github.com/blabu/c2cLib/dto"
 )
 
 // *Протокол.
