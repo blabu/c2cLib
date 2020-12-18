@@ -33,7 +33,7 @@ func randStringRunes(n int) string {
 type ConfConnection struct {
 	User        string
 	Pass        string
-	СhunkSize   uint64
+	ChunkSize   uint64
 	IsNew       bool // true - будет сделана попытка регистрации пользователя
 	PingTimeout time.Duration
 }
@@ -51,13 +51,13 @@ type Connection struct {
 type IConnection interface {
 	Read() (from string, command uint16, data []byte, err error)
 	Write(to string, command uint16, data []byte) error
- Connect(name string) error
+	Connect(name string) error
 	Close() error
 }
 
 //NewC2cConnection - create new c2c connection register or init than
 func NewC2cConnection(conn net.Conn, cnf ConfConnection) (IConnection, error) {
-	p := parser.CreateEmptyParser(cnf.СhunkSize)
+	p := parser.CreateEmptyParser(cnf.ChunkSize)
 	res := &Connection{
 		conn: conn,
 		cnf:  cnf,
