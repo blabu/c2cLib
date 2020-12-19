@@ -1,7 +1,6 @@
 package connector
 
 import (
-	"bufio"
 	"bytes"
 	"crypto/sha256"
 	"encoding/base64"
@@ -109,8 +108,7 @@ func (c *Connection) Write(to string, command uint16, data []byte) error {
 
 func (c *Connection) Read() (from string, command uint16, data []byte, err error) {
 	c.conn.SetReadDeadline(time.Now().Add(10 * c.readTimeout))
-	reader := bufio.NewReader(c.conn)
-	receiveBuff, err := c.p.ReadPacketHeader(reader)
+	receiveBuff, err := c.p.ReadPacketHeader(c.conn)
 	if err != nil {
 		return "", 0, nil, err
 	}
@@ -121,7 +119,7 @@ func (c *Connection) Read() (from string, command uint16, data []byte, err error
 	if restSize > 0 {
 		resp := make([]byte, restSize)
 		c.conn.SetReadDeadline(time.Now().Add(time.Duration(restSize) * c.readTimeout))
-		_, err := io.ReadFull(reader, resp)
+		_, err := io.ReadFull(c.conn, resp)
 		if err != nil {
 			return "", 0, nil, err
 		}
