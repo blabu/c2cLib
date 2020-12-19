@@ -162,7 +162,7 @@ func (c2c *C2cParser) ParseMessage(data []byte) (dto.Message, error) {
 // TODO каждый раз парсить заголовок не эффективно надо будет переписать
 func (c2c *C2cParser) IsFullReceiveMsg(data []byte) (int, error) {
 	if _, err := c2c.parseHeader(data); err != nil {
-		return -1, err
+		return 0, err
 	}
 	return c2c.head.contentSize + c2c.head.headerSize - len(data), nil
 }
