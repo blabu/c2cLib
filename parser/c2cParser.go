@@ -164,9 +164,6 @@ func (c2c *C2cParser) IsFullReceiveMsg(data []byte) (int, error) {
 	if _, err := c2c.parseHeader(data); err != nil {
 		return -1, err
 	}
-	if len(data) >= c2c.head.contentSize+c2c.head.headerSize {
-		return 0, nil
-	}
 	return c2c.head.contentSize + c2c.head.headerSize - len(data), nil
 }
 
