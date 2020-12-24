@@ -107,6 +107,7 @@ func (c *Connection) Write(to string, command uint16, data []byte) error {
 }
 
 func (c *Connection) Read() (from string, command uint16, data []byte, err error) {
+m:
 	c.conn.SetReadDeadline(time.Now().Add(10 * c.readTimeout))
 	receiveBuff, err := c.p.ReadPacketHeader(c.conn)
 	if err != nil {
@@ -128,6 +129,9 @@ func (c *Connection) Read() (from string, command uint16, data []byte, err error
 	m, err := c.p.ParseMessage(receiveBuff)
 	if err != nil {
 		return "", 0, nil, err
+	}
+	if m.Command == dto.PingCOMMAND {
+		goto m
 	}
 	return m.From, m.Command, m.Content, nil
 }
